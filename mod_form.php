@@ -99,17 +99,22 @@ class mod_alternative_mod_form extends moodleform_mod {
         if ($this->_instance){
             $mform->addElement('static', 'uploadoverwrites', '', get_string('uploadoverwrites', 'alternative'));
         }
-        $mform->addElement('file', 'csvfile', get_string('file'), null,
-                   array('maxbytes' => $csvmaxbytes, 'accepted_types' => 'csv,txt'));
+        $mform->addElement(
+            'filepicker',
+            'csvfile',
+            get_string('file'),
+            null,
+            array(
+                'subdirs' => 0,
+                'maxbytes' => $csvmaxbytes,
+                'maxfiles' => 1,
+                'accepted_types' => 'csv,txt'
+            )
+        );
+        $mform->addHelpButton('csvfile', 'csv', 'alternative');
         $mform->addElement('text', 'csvsep', get_string('separator', 'alternative'), array('size'=>'1') );
         $mform->setDefault('csvsep', ';');
-        $mform->setType('csvsep', PARAM_FILE);
-        /*
-        $mform->addElement('filemanager', 'csvfile', get_string('file'), null,
-                    array('subdirs' => 0, 'maxbytes' => $csvmaxbytes, 'maxfiles' => 1,
-                          'accepted_types' => '*' ));
-         */
-        $mform->addHelpButton('csvfile', 'csv', 'alternative');
+        $mform->setType('csvsep', PARAM_TEXT);
 
         // link to groups
         $mform->addElement('header', 'alternativegroupbinding', get_string('fieldsetgroupbinding', 'alternative'));
@@ -315,7 +320,6 @@ class mod_alternative_mod_form extends moodleform_mod {
      * alternative_(add|update)_instance in lib.php
      */
     function import_csv() {
-
         $separator = $this->_form->getElementValue('csvsep');
         if ( $this->_form->getElementValue('teammax') ) {
             $placesindex = 'teamplacesavail';
