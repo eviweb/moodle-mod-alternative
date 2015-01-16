@@ -260,7 +260,7 @@ function alternative_table_synth_options($alternative, $cmid) {
  */
 function alternative_table_registrations($alternative) {
     global $DB, $PAGE, $COURSE;
-     
+
     $sql = "SELECT ao.id, ao.name, ao.placesavail, ao.teamplacesavail, "
          . "    GROUP_CONCAT(CONCAT(u.firstname, ' ',u.lastname) SEPARATOR ', ') AS regusers, "
          . "    GROUP_CONCAT(u.id SEPARATOR ', ') AS reguserids, "
@@ -271,7 +271,7 @@ function alternative_table_registrations($alternative) {
          . "LEFT JOIN {user} AS u ON (ar.userid = u.id) "
          . "WHERE ao.alternativeid = ? "
          . "GROUP BY ao.id";
-    $result = $DB->get_records_sql($sql, array($alternative->id));   
+    $result = $DB->get_records_sql($sql, array($alternative->id));
     $t = new html_table();
     $t->id = 'alt_registrations';
     $t->head = array(get_string('option', 'alternative'), get_string('students', 'alternative'));
@@ -321,7 +321,7 @@ function alternative_table_registrations($alternative) {
             $line->regusers = '<ul class="alt_user_list">'.implode("", $users).'</ul>';
         } else {
             $line->regusers = '<ul class="alt_user_list"></ul>';
-        }        
+        }
         $line->name = '<div class="alt_option" data-optionid="'.$line->id.'">'.$line->name.'</div>';
         $t_avail = '<div class="alt_avail">'.$t_avail.'</div>';
         $t_regs = '<div class="alt_regs">'.$t_regs.'</div>';
@@ -329,7 +329,7 @@ function alternative_table_registrations($alternative) {
         $tline = array($line->name, $line->regusers, $t_avail, $t_regs, $t_remains);
         $t->data[] = $tline;
     }
-    
+
     return $t;
 }
 
@@ -700,12 +700,16 @@ class select_team_members extends user_selector_base {
         if (isset($paramsGroups)) {
             $params = $params + $paramsGroups;
         }
+        $searchpattern = ($this->searchanywhere ? '%' : '').$search.'%';
         $sql = " FROM {user} u
                   JOIN ($esql) je ON je.id = u.id
                   LEFT JOIN {alternative_registration} ar ON (ar.userid = u.id AND ar.alternativeid = :altid)
                   $groupJoin
                  WHERE (alternativeid IS NULL OR teamleaderid = {$USER->id}) AND
                      u.id != {$USER->id} $groupCond ";
+        $sql .= !empty($search)
+            ? " AND (u.firstname LIKE '$searchpattern' OR u.lastname LIKE '$searchpattern' OR u.email LIKE '$searchpattern') "
+            : '';
         $order = ' ORDER BY u.lastname ASC, u.firstname ASC';
 
         if (!$this->is_validating()) {
@@ -727,7 +731,8 @@ class select_team_members extends user_selector_base {
     protected function get_options() {
         $options = parent::get_options();
         $options['alternative'] = (object) array(
-            'alternativeid' => $this->alternative->id,
+            'id' => $this->alternative->id,
+            'course'        => $this->alternative->course,
             'coursecontext' => $this->coursecontext,
         );
         $options['file']    = 'mod/alternative/locallib.php';
@@ -737,7 +742,7 @@ class select_team_members extends user_selector_base {
 
 /**
  * enroll users in groups according to the options they choose
- * 
+ *
  * @global StdClass $CFG        moodle global configuration object
  * @global \moodle_db $DB       moodle global database object
  * @global StdClass $COURSE     moodle global course object
@@ -746,21 +751,21 @@ class select_team_members extends user_selector_base {
 function alternative_generate_groups($alternative) {
     global $CFG, $DB, $COURSE;
     require_once $CFG->dirroot.'/group/lib.php';
-    
+
     $sql = 'SELECT ar.id, ao.groupid, ar.userid ';
     $sql.= 'FROM {alternative_option} ao ';
     $sql.= 'JOIN {alternative_registration} ar ';
     $sql.= 'ON ao.id = ar.optionid ';
     $sql.= 'AND ao.alternativeid = '.$alternative->id.' ';
-    
-    if ((boolean) $alternative->groupbinding) {        
+
+    if ((boolean) $alternative->groupbinding) {
         $records = $DB->get_records_sql($sql);
         foreach ($records as $reg => $record) {
             // get groups in which the current user is registered
             $groups = groups_get_all_groups($COURSE->id, $record->userid);
             // remove user from groups
             foreach ($groups as $group) {
-                if ($group->id !== $record->groupid) {                    
+                if ($group->id !== $record->groupid) {
                     groups_remove_member($group->id, $record->userid);
                 }
             }
