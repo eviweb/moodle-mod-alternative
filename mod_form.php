@@ -45,7 +45,7 @@ class mod_alternative_mod_form extends moodleform_mod {
 
         // include JS Module
         $PAGE->requires->js_init_call('M.mod_alternative.init');
-        
+
         //-------------------------------------------------------------------------------
         // Adding the "general" fieldset, where all the common settings are showed
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -103,6 +103,7 @@ class mod_alternative_mod_form extends moodleform_mod {
                    array('maxbytes' => $csvmaxbytes, 'accepted_types' => 'csv,txt'));
         $mform->addElement('text', 'csvsep', get_string('separator', 'alternative'), array('size'=>'1') );
         $mform->setDefault('csvsep', ';');
+        $mform->setType('csvsep', PARAM_FILE);
         /*
         $mform->addElement('filemanager', 'csvfile', get_string('file'), null,
                     array('subdirs' => 0, 'maxbytes' => $csvmaxbytes, 'maxfiles' => 1,
@@ -121,15 +122,15 @@ class mod_alternative_mod_form extends moodleform_mod {
         $mform->addElement('advcheckbox', 'grouponetoone', get_string('grouponetoone', 'alternative'));
         $mform->setDefault('grouponetoone', 0);
         $mform->addHelpButton('grouponetoone', 'grouponetoone', 'alternative');
-        // all mutual exclusion behaviours are defined in module.js 
-        
+        // all mutual exclusion behaviours are defined in module.js
+
         // get groups
-        $groups = array("-1" => get_string('optiongroupnone', 'alternative'));        
+        $groups = array("-1" => get_string('optiongroupnone', 'alternative'));
         $db_groups = $DB->get_records('groups', array('courseid' => $COURSE->id));
         foreach ($db_groups as $group) {
             $groups[$group->id] = $group->name;
         }
-        
+
         //-------------------------------------------------------------------------------
         $repeatarray = array();
         $repeatarray[] = $mform->createElement('header', '', get_string('option', 'alternative').' {no}');
@@ -156,6 +157,10 @@ class mod_alternative_mod_form extends moodleform_mod {
         $mform->addHelpButton('option[name][0]', 'alternativeoptions', 'alternative');
         $mform->addHelpButton('option[datecomment][0]', 'datecomment', 'alternative');
         for ($i = 0 ; $i < $repeatno ; $i++) {
+            $mform->setType("option[name][$i]", PARAM_RAW_TRIMMED);
+            $mform->setType("option[groupid][$i]", PARAM_INT);
+            $mform->setType("option[datecomment][$i]", PARAM_TEXT);
+            //****
             $mform->setType("option[introeditor][$i]", PARAM_RAW);
             //****
             $mform->setDefault("option[placesavail][$i]", '');
@@ -179,7 +184,7 @@ class mod_alternative_mod_form extends moodleform_mod {
         $this->standard_coursemodule_elements();
         //-------------------------------------------------------------------------------
         // add standard buttons, common to all modules
-        $this->add_action_buttons();        
+        $this->add_action_buttons();
     }
 
     function get_data() {
