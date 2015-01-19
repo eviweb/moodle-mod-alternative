@@ -28,12 +28,17 @@ require_once(dirname(__FILE__).'/lib.php');
 $id = required_param('id', PARAM_INT);   // course
 
 $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
+$coursecontext = context_course::instance($course->id);
 
 require_course_login($course);
 $PAGE->set_pagelayout('incourse');
-add_to_log($course->id, 'alternative', 'view all', 'index.php?id='.$course->id, '');
 
-$coursecontext = context_course::instance($course->id);
+$event = \mod_alternative\event\course_module_instance_list_viewed::create(
+    array(
+        'context' => $coursecontext
+    )
+);
+$event->trigger();
 
 $PAGE->set_url('/mod/alternative/index.php', array('id' => $id));
 $PAGE->set_title(format_string($course->fullname));
