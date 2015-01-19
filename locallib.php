@@ -27,6 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once __DIR__.'/autoload.php';
+
 /* @var $DB moodle_database */
 
 require dirname(__FILE__) . '/lib.php';
