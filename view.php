@@ -58,7 +58,15 @@ if ( has_capability('mod/alternative:forceregistrations', $coursecontext)
     redirect("$CFG->wwwroot/mod/alternative/report.php?id={$cm->id}&table=synth");
 }
 
-add_to_log($course->id, 'alternative', 'view', "view.php?id={$cm->id}", $alternative->name, $cm->id);
+$event = \mod_alternative\event\course_module_viewed::create(
+    array(
+        'objectid' => $alternative->id,
+        'context' => $coursecontext
+    )
+);
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('alternative', $alternative);
+$event->trigger();
 
 /// Print the page header
 
