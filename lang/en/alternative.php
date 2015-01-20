@@ -38,6 +38,9 @@ Teachers, and all roles that have the capability `alternatives:forceregistration
 $string['displaycompact'] = "Compact display";
 $string['displaycompact_help'] = "If not checked, each option will be displayed on several lines, with an explicit description.
 	If checked, each option will be displayed on one line, with a folded description.";
+$string['displayorder'] = "Display options in alphabetical order";
+$string['displayorder_help'] = "If checked, options will be arranged in alphabetical order.
+By default, options are arranged following their creation order.";
 
 $string["fieldsetteam"] = "Settings for teams";
 $string['teamenable'] = 'Enable team settings';

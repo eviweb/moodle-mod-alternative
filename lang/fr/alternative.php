@@ -38,6 +38,9 @@ Les enseignants et les rôles ayant la capacité `alternatives:forceregistration
 $string['displaycompact'] = "Affichage compact";
 $string['displaycompact_help'] = "Si non cochée, chaque option sera affichée sur plusieurs lignes,
 	avec une description explicite. Si cochée, chaque option prendra une ligne, la description sera dépliable.";
+$string['displayorder'] = "Afficher les options par ordre alphabétique";
+$string['displayorder_help'] = "Si cochée, affiche les options pas ordre alphabétique.
+Par défaut, l'ordre des options est celui de leur création.";
 
 $string['fieldsetteam'] = "Réglages pour les équipes";
 $string['teamenable'] = "Activer les réglages pour les équipes";
