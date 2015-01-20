@@ -51,7 +51,7 @@ class registration_updated extends \core\event\base
      */
     protected function init()
     {
-        $this->data['objecttable'] = 'registration_updated';
+        $this->data['objecttable'] = 'alternative_registration';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
