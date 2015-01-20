@@ -52,7 +52,6 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 $coursecontext = context_course::instance($course->id);
 
-
 if ( has_capability('mod/alternative:forceregistrations', $coursecontext)
             && ! $forcereg ) {
     redirect("$CFG->wwwroot/mod/alternative/report.php?id={$cm->id}&table=synth");
@@ -61,7 +60,7 @@ if ( has_capability('mod/alternative:forceregistrations', $coursecontext)
 $event = \mod_alternative\event\course_module_viewed::create(
     array(
         'objectid' => $alternative->id,
-        'context' => $coursecontext
+        'context' => $context
     )
 );
 $event->add_record_snapshot('course', $course);
@@ -90,7 +89,7 @@ if (!$form->is_cancelled() and $form->is_submitted() and $form->is_validated()) 
             $_SESSION['alterNotifStat'] = 'notifysuccess';
             $_SESSION['alterNotifMsg'] = get_string('registrationsaved', 'alternative');
             $params = array(
-                'context' => $coursecontext,
+                'context' => $context,
                 'other' => array(
                     'alternativeid' => $alternative->id,
                     'alternativename' => $alternative->name
