@@ -104,7 +104,7 @@ function xmldb_alternative_upgrade($oldversion) {
         // alternative savepoint reached
         upgrade_mod_savepoint(true, 2012112500, 'alternative');
     }
-    
+
     if ($oldversion < 2013091801) {
         // Define group related fields to be added to alternative
         $table = new xmldb_table('alternative');
@@ -113,7 +113,7 @@ function xmldb_alternative_upgrade($oldversion) {
             new xmldb_field('groupmatching', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'groupbinding'),
             new xmldb_field('grouponetoone', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'groupmatching')
         );
-            
+
         // Add group related fields
         foreach ($fields as $field) {
             if (!$dbman->field_exists($table, $field)) {
@@ -132,6 +132,24 @@ function xmldb_alternative_upgrade($oldversion) {
 
         // Once we reach this point, we can store the new version
         upgrade_mod_savepoint(true, 2013091801, 'alternative');
+    }
+
+    if ($oldversion < 2015012103) {
+        // Define group related fields to be added to alternative
+        $table = new xmldb_table('alternative');
+        $fields = array(
+            new xmldb_field('optionorder', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'compact')
+        );
+
+        // Add group related fields
+        foreach ($fields as $field) {
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+        }
+
+        // Once we reach this point, we can store the new version
+        upgrade_mod_savepoint(true, 2015012103, 'alternative');
     }
 
     // Final return of upgrade result (true, all went good) to Moodle.
