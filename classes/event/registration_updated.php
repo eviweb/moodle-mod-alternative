@@ -116,5 +116,9 @@ class registration_updated extends \core\event\base
         if (!isset($this->other['alternativename'])) {
             throw new \coding_exception('The \'alternativename\' value must be set in other.');
         }
+
+        if (!isset($this->data['relateduserid'])) {
+            throw new \coding_exception('The \'relateduserid\' value must be defined.');
+        }
     }
 }

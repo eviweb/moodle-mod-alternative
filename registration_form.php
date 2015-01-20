@@ -39,6 +39,7 @@ require_once($CFG->dirroot.'/course/moodleform_mod.php');
  */
 class mod_alternative_registration_form extends moodleform {
     private $user_has_registered = false;
+    private $registrationinfo;
     /**
      * @var int null unless the registration applies to a selected user.
      */
@@ -51,6 +52,7 @@ class mod_alternative_registration_form extends moodleform {
         $customdata['occupied'] = alternative_options_occupied_places($customdata['alternative'], false);
         $customdata['teamoccupied'] = alternative_options_occupied_places($customdata['alternative'], true);
         parent::moodleform($action, $customdata);
+        $this->registrationinfo = array();
     }
 
     /**
@@ -168,9 +170,14 @@ class mod_alternative_registration_form extends moodleform {
         return $this->user_has_registered;
     }
 
+    public function getRegistrationInfo()
+    {
+        return $this->registrationinfo;
+    }
+
     public function save_to_db($userid) {
         global $DB;
-
+        $this->registrationinfo = array();
         $data = $this->get_data();
         if (empty($data) or empty($data->option)) {
             return false;
@@ -209,10 +216,24 @@ class mod_alternative_registration_form extends moodleform {
                     foreach ($this->_form->membersselector->get_selected_users() as $member) {
                         $regMember = $reg;
                         $regMember['userid'] = $member->id;
-                        $ok = $ok && $DB->insert_record('alternative_registration', $regMember);
+                        $recordid = $DB->insert_record('alternative_registration', $regMember);
+                        if ($recordid) {
+                            $this->registrationinfo[] = array(
+                                'registrationid' => $recordid,
+                                'userid' => $regMember['userid']
+                            );
+                        }
+                        $ok = $ok && $recordid;
                     }
                 }
-                $ok = $ok && $DB->insert_record('alternative_registration', $reg);
+                $recordid = $DB->insert_record('alternative_registration', $reg);
+                if ($recordid) {
+                    $this->registrationinfo[] = array(
+                        'registrationid' => $recordid,
+                        'userid' => $reg['userid']
+                    );
+                }
+                $ok = $ok && $recordid;
             }
         }
         if ($ok) {
