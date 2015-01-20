@@ -89,7 +89,15 @@ if (!$form->is_cancelled() and $form->is_submitted() and $form->is_validated()) 
         if ($form->save_to_db($USER->id)) {
             $_SESSION['alterNotifStat'] = 'notifysuccess';
             $_SESSION['alterNotifMsg'] = get_string('registrationsaved', 'alternative');
-            add_to_log($course->id, "alternative", "update registration", "view.php?id=$cm->id", $alternative->id, $cm->id);
+            $params = array(
+                'context' => $coursecontext,
+                'other' => array(
+                    'alternativeid' => $alternative->id,
+                    'alternativename' => $alternative->name
+                )
+            );
+            $event = \mod_alternative\event\registration_updated::create($params);
+            $event->trigger();
             if (has_capability('mod/alternative:forceregistrations', $coursecontext)) {
                 // teacher forced registration, send him away
                 redirect("$CFG->wwwroot/mod/alternative/report.php?id={$cm->id}&table=synth");
