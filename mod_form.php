@@ -148,6 +148,14 @@ class mod_alternative_mod_form extends moodleform_mod {
         $repeatarray[] = $mform->createElement('text', 'option[teamplacesavail]', get_string('teamplacesavail', 'alternative'));
         $repeatarray[] = $mform->createElement('hidden', 'option[id]', 0);
 
+        $mform->setType("option[name]", PARAM_RAW_TRIMMED);
+        $mform->setType("option[groupid]", PARAM_INT);
+        $mform->setType("option[datecomment]", PARAM_TEXT);
+        $mform->setType("option[introeditor]", PARAM_RAW);
+        $mform->setType("option[placesavail]", PARAM_INT);
+        $mform->setType("option[teamplacesavail]", PARAM_INT);
+        $mform->setType("option[id]", PARAM_INT);
+
         if ($this->_instance){
             global $DB;
             $repeatno = 1 + $DB->count_records('alternative_option', array('alternativeid' => $this->_instance));
