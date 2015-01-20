@@ -586,7 +586,31 @@ function alternative_unregister_user($altid, $user, $option) {
     return $res;
 }
 
+/**
+ * get the registration ids for a user
+ * @global \moodle_db $DB
+ * @param integer $altid alternative id
+ * @param integer $userid user id
+ * @param integer $optionid option id
+ * @param boolean $isteamleader is user a team leader ? true: yes, false: no
+ * @return array returns the registration ids
+ */
+function alternative_get_user_registrations($altid, $userid, $optionid, $isteamleader = false) {
+    global $DB;
 
+    $userkey = $isteamleader ? 'teamleaderid' : 'userid';
+
+    return $DB->get_records(
+        'alternative_registration',
+        array(
+            'alternativeid'=>$altid,
+            $userkey => $userid,
+            'optionid'=>$optionid
+        ),
+        '',
+        'id,userid'
+    );
+}
 
 /**
  * Sends a reminder message to all non registered students

@@ -40,8 +40,6 @@ $context = context_module::instance($cm->id);
 $coursecontext = context_course::instance($course->id);
 require_capability('mod/alternative:forceregistrations', $context);
 
-add_to_log($course->id, 'alternative', 'unregister', "report.php?id={$cm->id}&table=synth", $alternative->name, $cm->id);
-
 // Print the page header
 $PAGE->set_url('/mod/alternative/unregister.php', array('a' => $altid, 'leader' => $leader, 'user' => $user, 'option' => $option));
 $PAGE->set_title(format_string($alternative->name));
@@ -53,16 +51,38 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($alternative->name);
 echo $OUTPUT->heading(get_string('unregister', 'alternative'));
 
+$userregs = array();
 if ($leader > 0 && $user == 0) {
+    $userregs = alternative_get_user_registrations($altid, $leader, $option, true);
+
     echo "Désinscription des étudiants :" . "\n";
     echo "<ul>\n";
     echo alternative_unregister_team($altid, $leader, $option);
     echo "</ul>\n";
 } elseif ($leader == 0 && $user > 0) {
+    $userregs = alternative_get_user_registrations($altid, $user, $option);
+
     echo "Désinscription de l'étudiant : ";
     echo  alternative_unregister_user($altid, $user, $option);
 } else {
     echo 'Too bad: leader and user should not be simultaneously zero.';
+}
+
+foreach ($userregs as $userreg) {
+    $params = array(
+        'context' => $context,
+        'objectid' => $userreg->id,
+        'relateduserid' => $userreg->userid,
+        'other' => array(
+            'alternativeid' => $alternative->id,
+            'alternativename' => $alternative->name,
+            'optionid' => $option,
+            'leaderid' => $leader,
+            'userid' => $user
+        )
+    );
+    $event = \mod_alternative\event\registration_deleted::create($params);
+    $event->trigger();
 }
 
 // Finish the page

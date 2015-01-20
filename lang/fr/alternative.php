@@ -183,3 +183,4 @@ $string['modifyregistrations'] = 'Modifier les inscriptions';
 $string['unknownaction'] = 'Action inconnue';
 
 $string['eventregistrationupdated'] = 'Inscription mise à jour';
+$string['eventregistrationdeleted'] = 'Inscription supprimée';
