@@ -72,6 +72,10 @@ class mod_alternative_mod_form extends moodleform_mod {
         $mform->setDefault('compact', 0);
         $mform->addHelpButton ('compact', 'displaycompact', 'alternative');
 
+        $mform->addElement('advcheckbox', 'optionorder', get_string('displayorder', 'alternative'));
+        $mform->setDefault('optionorder', 0);
+        $mform->addHelpButton ('optionorder', 'displayorder', 'alternative');
+
         $mform->addElement('header', 'alternativefieldset1', get_string('fieldsetteam', 'alternative'));
         $mform->addElement('checkbox', 'teamenable', get_string('enable'));
         $mform->addElement('text', 'teammin', get_string('teammin', 'alternative'), array('size'=>'4'));
