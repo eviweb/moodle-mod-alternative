@@ -87,7 +87,7 @@ function alternative_add_instance(stdClass $alternative, mod_alternative_mod_for
 
     $fields = array('name', 'intro', 'introformat', 'datecomment', 'placesavail', 'teamplacesavail', 'groupdependent', 'id', 'groupid');
 
-    if ( $mform->get_data() ) {
+    if ( $mform->get_new_filename('csvfile') ) {
         $options = $mform->import_csv();
     } else {
         $options = $alternative->option;
@@ -147,7 +147,7 @@ function alternative_update_instance(stdClass $alternative, mod_alternative_mod_
 
     $fields = array('name', 'intro', 'introformat', 'datecomment', 'placesavail', 'teamplacesavail', 'groupdependent', 'id', 'groupid');
 
-    if ( $mform->get_data() ) {
+    if ( $mform->get_new_filename('csvfile') ) {
         $options = $mform->import_csv();
         alternative_delete_options($alternative->id);
     } else {
