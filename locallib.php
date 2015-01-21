@@ -623,14 +623,14 @@ function alternative_send_reminder($alternative) {
     global $DB, $USER;
 
     $cm = get_coursemodule_from_instance('alternative', $alternative->id, 0, false, MUST_EXIST);
-    $until = ( $cm->availableuntil > 0 ?
+    $until = ( isset($cm->availableuntil) && $cm->availableuntil > 0 ?
             str_replace ('[[AlterUntil]]', userdate($cm->availableuntil),
                     get_string('reminderBefore', 'alternative')) . '.'
             : '.');
     $context = context_course::instance($alternative->course);
     list($esql, $params) = get_enrolled_sql($context, 'mod/alternative:choose');
     // who hasn't registered yet?
-    $sql = "SELECT u.id, u.firstname, u.lastname
+    $sql = "SELECT u.id, ".join(', ', get_all_user_name_fields(false, null, 'u.')).", u.email, u.auth, u.deleted, u.suspended, u.emailstop
               FROM {user} u
               JOIN ($esql) je ON je.id = u.id
               LEFT JOIN {alternative_registration} ar ON (ar.userid = u.id AND ar.alternativeid = :altid)
