@@ -22,7 +22,7 @@ class backup_alternative_activity_structure_step extends backup_activity_structu
         $alternative = new backup_nested_element('alternative', array('id'), array(
             'name', 'intro', 'introformat',
             'teammin', 'teammax', 'multiplemin', 'multiplemax',
-            'changeallowed', 'publicreg', 'notifybyemail', 'compact',
+            'changeallowed', 'publicreg', 'notifybyemail', 'compact', 'optionorder',
             'groupbinding', 'groupmatching', 'grouponetoone',
             'timecreated', 'timemodified'));
 
