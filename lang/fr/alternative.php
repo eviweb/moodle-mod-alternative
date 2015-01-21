@@ -184,3 +184,4 @@ $string['unknownaction'] = 'Action inconnue';
 
 $string['eventregistrationupdated'] = 'Inscription mise à jour';
 $string['eventregistrationdeleted'] = 'Inscription supprimée';
+$string['eventreportviewed'] = 'Rapport visionné';

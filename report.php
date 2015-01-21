@@ -53,7 +53,17 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 $can_register_anyone = has_capability('mod/alternative:forceregistrations', $context);
 
-add_to_log($course->id, 'alternative', 'report', "report.php?id={$id}&table={$table}", $alternative->name, $cm->id);
+$event = \mod_alternative\event\report_viewed::create(
+    array(
+        'context' => $context,
+        'other' => array(
+            'alternativeid' => $alternative->id,
+            'alternativename' => $alternative->name,
+            'reportname' => $table
+        )
+    )
+);
+$event->trigger();
 
 switch ($table) {
 	case 'synth':
@@ -97,7 +107,7 @@ else {
     $PAGE->set_url('/mod/alternative/report.php', array('id' => $id, 'table' => $table));
     $PAGE->set_title(format_string($alternative->name));
     $PAGE->set_heading(format_string($course->fullname));
-    $PAGE->set_context($context);        
+    $PAGE->set_context($context);
 
     // begin the page
     echo $OUTPUT->header();
@@ -131,7 +141,7 @@ else {
                 );
             echo $modifyregbutton;
         }
-        
+
         $registerbutton = $OUTPUT->single_button(
             new moodle_url('/mod/alternative/view.php',
                     array('a' => $alternative->id, 'forcereg' => 1)),
@@ -139,7 +149,7 @@ else {
                 'post'
             );
         echo $registerbutton;
-                
+
         if ((boolean)$alternative->groupbinding) {
             $groupbutton = $OUTPUT->single_button(
                 new moodle_url('/mod/alternative/groups.php',
@@ -149,7 +159,7 @@ else {
                 );
             echo $groupbutton;
         }
-                
+
         $reminderbutton = $OUTPUT->single_button(
             new moodle_url('/mod/alternative/sendreminder.php',
                     array('a' => $alternative->id )),
