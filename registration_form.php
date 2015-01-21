@@ -99,6 +99,12 @@ class mod_alternative_registration_form extends moodleform {
 			$mform->addElement('header', "fieldset[0]", 'Options');
 		}
 
+        if ( $this->_customdata['alternative']->optionorder ) { //order options
+            uasort($this->_customdata['options'], function ($option1, $option2) {
+                return strcmp($option1->name, $option2->name);
+            });
+        }
+
         foreach ($this->_customdata['options'] as $id => $option) {
             $attributes = null; // s'il n'y a plus de places dans cette option => disabled
             if ($option->placesavail) {

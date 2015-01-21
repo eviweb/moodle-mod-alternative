@@ -272,7 +272,7 @@ function alternative_table_registrations($alternative) {
          . "LEFT JOIN {alternative_registration} AS ar ON (ar.optionid = ao.id) "
          . "LEFT JOIN {user} AS u ON (ar.userid = u.id) "
          . "WHERE ao.alternativeid = ? "
-         . "GROUP BY ao.id";
+         . "GROUP BY ao.".(alternative_isordered($alternative) ? 'name' : 'id');
     $result = $DB->get_records_sql($sql, array($alternative->id));
     $t = new html_table();
     $t->id = 'alt_registrations';
@@ -335,6 +335,16 @@ function alternative_table_registrations($alternative) {
     return $t;
 }
 
+/**
+ * check if the options of an alternative should be displayed in a specific order
+ *
+ * @param stdClass $alternative alternative instance
+ * @return boolean return true if options should be ordered or false
+ */
+function alternative_isordered($alternative)
+{
+    return $alternative->optionorder == 1;
+}
 
 /**
  * @global \moodle_db $DB
