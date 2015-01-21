@@ -183,3 +183,4 @@ $string['unknownaction'] = 'Unknown action';
 $string['eventregistrationupdated'] = 'Registration updated';
 $string['eventregistrationdeleted'] = 'Registration deleted';
 $string['eventreportviewed'] = 'Report viewed';
+$string['eventremindersent'] = 'Reminder sent';

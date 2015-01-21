@@ -46,12 +46,21 @@ if ( has_capability('mod/alternative:forceregistrations', $coursecontext) ) {
     if ( $res['err'] == 0 ) {
         $_SESSION['alterNotifStat'] = 'notifysuccess';
         $_SESSION['alterNotifMsg'] = "Résultat envoi : ${res['ok']} messages OK";
-        add_to_log($course->id, "alternative", "reminder sent", "view.php?id=$cm->id", $alternative->id, $cm->id);
     } else {
         $_SESSION['alterNotifStat'] = 'notifyfailure';
         $_SESSION['alterNotifMsg'] = "Résultat envoi : ${res['ok']} messages OK ; ${res['err']} erreurs.";
-        add_to_log($course->id, "alternative", "reminder NOT cleanly sent", "view.php?id=$cm->id", $alternative->id, $cm->id);
     }
+    $event = \mod_alternative\event\reminder_sent::create(
+        array(
+            'context' => $context,
+            'other' => array(
+                'alternativeid' => $alternative->id,
+                'alternativename' => $alternative->name,
+                'errors' => $res['err']
+            )
+        )
+    );
+    $event->trigger();
 }
 
 redirect("$CFG->wwwroot/mod/alternative/report.php?id={$cm->id}&table=synth");
