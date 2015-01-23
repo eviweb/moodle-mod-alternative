@@ -3,6 +3,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 $module = new stdClass();
+$module->component = '';
 
 require_once __DIR__.'/version.php';
 
