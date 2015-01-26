@@ -189,3 +189,7 @@ $string['eventregistrationupdated'] = 'Inscription mise à jour';
 $string['eventregistrationdeleted'] = 'Inscription supprimée';
 $string['eventreportviewed'] = 'Rapport visionné';
 $string['eventremindersent'] = 'Rappel envoyé';
+
+$string['notifybyemail'] = 'Informer les utilisateurs inscrits par email';
+$string['notifybyemail_help'] = 'Informer automatiquement par email les utilisateurs de leurs inscriptions.<br>
+Permet aux enseignants d\'informer par email les utilisateurs de leurs inscriptions.';
