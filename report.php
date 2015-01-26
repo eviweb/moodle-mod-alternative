@@ -160,6 +160,16 @@ else {
             echo $groupbutton;
         }
 
+        if ((boolean)$alternative->notifybyemail) {
+            $notifybyemailbutton = $OUTPUT->single_button(
+                new moodle_url('/mod/alternative/notifyregistered.php',
+                        array('a' => $alternative->id)),
+                    get_string('notifybyemail', 'alternative'),
+                    'post'
+                );
+            echo $notifybyemailbutton;
+        }
+
         $reminderbutton = $OUTPUT->single_button(
             new moodle_url('/mod/alternative/sendreminder.php',
                     array('a' => $alternative->id )),
