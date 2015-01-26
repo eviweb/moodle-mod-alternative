@@ -1,3 +1,5 @@
+V. 1.1.2 minor fixes
+
 V. 1.1.1 add option display order setting
 
 V. 1.1.0 use new logging API -> moodle 2.7 required
