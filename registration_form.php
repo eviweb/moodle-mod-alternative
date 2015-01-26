@@ -160,6 +160,10 @@ class mod_alternative_registration_form extends moodleform {
 				}
 				//** @todo ajouter la description repliée ou popup
 			}
+
+            // force non collapsed option headers
+            $mform->setExpanded("fieldset[$id]", true, true);
+
             if ($option->registrationid) {
                 $this->user_has_registered = true;
             }
