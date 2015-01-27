@@ -717,3 +717,106 @@ function alternative_add_dragdrop_registration($alternativeid) {
 
     $PAGE->requires->css(new moodle_url('css/dragdrop.css'));
 }
+
+/**
+ * get all registrations for a given alternative
+ *
+ * @global StdClass $DB global moodle database object
+ * @param integer $alternativeid alternative identifier
+ * @return array returns an array of an alternative registrations
+ *               each registration record contains the following fields :
+ *                  - id: record id
+ *                  - alternativeid: alternative id
+ *                  - optionid: option id
+ *                  - userid: registered user id
+ */
+function alternative_get_registrations($alternativeid)
+{
+    global $DB;
+
+    return $DB->get_records(
+        'alternative_registration',
+        array('alternativeid' => $alternativeid),
+        '',
+        'id,alternativeid,optionid,userid'
+    );
+}
+
+/**
+ * get information of a given registration
+ *
+ * @global StdClass $DB global moodle database object
+ * @param integer $alternativeid alternative identifier
+ * @return array returns an array of registration information objects whose attributes are:
+ *                  - id: the user id
+ *                  - firstnamephonetic: user firstname phonetic
+ *                  - lastnamephonetic: user lastname phonetic
+ *                  - middlename: user middlename
+ *                  - alternatename: user alternate name
+ *                  - firstname: user firstname
+ *                  - lastname: user lastname
+ *                  - email: user email
+ *                  - auth: user authentication method
+ *                  - deleted: user account deletion status
+ *                  - suspended: user account suspension status
+ *                  - emailstop: user emailstop setting
+ *                  - alternativename: name of the alternative of the registration
+ *                  - choices: comma separated list of options chosen by the user
+ */
+function alternative_get_registration_info($alternativeid)
+{
+    global $DB;
+
+    $sql = 'SELECT u.id, '.join(', ', get_all_user_name_fields(false, null, 'u.')).', u.email, u.auth, u.deleted, u.suspended, u.emailstop, ';
+    $sql.= 'a.name as alternativename ';
+    $sql.= 'FROM {user} u ';
+    $sql.= 'JOIN {alternative_registration} ar ';
+    $sql.= 'ON ar.alternativeid = :altid AND u.id = ar.userid ';
+    $sql.= 'JOIN {alternative} a ';
+    $sql.= 'ON a.id = ar.alternativeid ';
+    $sql.= 'WHERE u.deleted = 0 AND u.suspended = 0 ';
+    $sql.= 'GROUP BY u.id ';
+    $sql.= 'ORDER BY u.id ASC ';
+
+    $params = array(
+        'altid' => $alternativeid
+    );
+
+    $reginfo = $DB->get_records_sql($sql, $params);
+
+    foreach ($reginfo as $item) {
+        $choices = alternative_get_registration_choices($alternativeid, $item->id);
+        $item->choices = join(',', $choices);
+    }
+
+    return $reginfo;
+}
+
+/**
+ * get registration option names
+ *
+ * @global StdClass $DB global moodle database object
+ * @param integer $alternativeid alternative identifier
+ * @param integer $userid user identifier
+ * @return array returns an array option names
+ */
+function alternative_get_registration_choices($alternativeid, $userid)
+{
+    global $DB;
+
+    $sql = 'SELECT ao.name ';
+    $sql.= 'FROM {alternative_option} ao ';
+    $sql.= 'JOIN {alternative_registration} ar ';
+    $sql.= 'ON ar.alternativeid = :altid ';
+    $sql.= 'JOIN {user} u ';
+    $sql.= 'ON ar.userid = u.id AND u.id = :uid ';
+    $sql.= 'WHERE ao.id = ar.optionid ';
+    $sql.= 'ORDER BY ao.name ASC ';
+
+    $params = array(
+        'altid' => $alternativeid,
+        'uid' => $userid
+    );
+
+    return array_keys($DB->get_records_sql($sql, $params));
+}
