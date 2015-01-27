@@ -187,7 +187,14 @@ $string['eventregistrationupdated'] = 'Registration updated';
 $string['eventregistrationdeleted'] = 'Registration deleted';
 $string['eventreportviewed'] = 'Report viewed';
 $string['eventremindersent'] = 'Reminder sent';
+$string['eventnotificationsent'] = 'Notification sent';
 
 $string['notifybyemail'] = 'Notify registered users by email';
 $string['notifybyemail_help'] = 'Automatically notify a user of his registration by email.<br>
 Allow teachers to notify all the registered users of their registrations by email.';
+
+$string['messageprovider:notifier'] = 'mod/alternative registration notifier';
+$string['notifierSubject'] = "Notification : chosen options in alternative “[[AlterName]]”";
+$string['notifierFull'] = "Your chosen options in the activity “[[AlterName]]” are: [[options]]";
+$string['notifierFullHtml'] = "Your chosen options in the activity “<i>[[AlterName]]</i>” are:<ul>[[options]]</ul>";
+$string['notifierSmall'] = "Your chosen options in the activity “[[AlterName]]” are: [[options]]";
