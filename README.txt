@@ -1,3 +1,5 @@
+V. 1.2.0 add registration notification by email feature
+
 V. 1.1.2 minor fixes
 
 V. 1.1.1 add option display order setting
