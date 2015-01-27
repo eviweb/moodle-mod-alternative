@@ -36,4 +36,12 @@ $messageproviders = array(
             'email' => MESSAGE_FORCED,
         ),
     ),
+    // Notify registered users about their choices
+    'notifier' => array(
+        'capability' => 'mod/alternative:choose',
+        'defaults' => array(
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN,
+            'email' => MESSAGE_FORCED,
+        ),
+    ),
 );
