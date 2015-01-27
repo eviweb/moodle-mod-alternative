@@ -97,6 +97,7 @@ class mod_alternative_registration_form extends moodleform {
 
 		if ( $this->_customdata['alternative']->compact ) { //compact display
 			$mform->addElement('header', "fieldset[0]", 'Options');
+            $mform->setExpanded("fieldset[0]", true, true);
 		}
 
         if ( $this->_customdata['alternative']->optionorder ) { //order options
@@ -161,8 +162,10 @@ class mod_alternative_registration_form extends moodleform {
 				//** @todo ajouter la description repliée ou popup
 			}
 
-            // force non collapsed option headers
-            $mform->setExpanded("fieldset[$id]", true, true);
+            if ( !(boolean)$this->_customdata['alternative']->compact ) {
+                // force non collapsed option headers
+                $mform->setExpanded("fieldset[$id]", true, true);
+            }
 
             if ($option->registrationid) {
                 $this->user_has_registered = true;
