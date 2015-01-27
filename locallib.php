@@ -676,6 +676,75 @@ function alternative_send_reminder($alternative) {
     return $count;
 }
 
+/**
+ * notifies registered users about their choices
+ *
+ * @global StdClass $USER current user object
+ * @param StdClass $alternative current alternative object
+ * @return array returns an array of the sending status
+ *               it contains to record referenced by the following keys :
+ *               - ok: the number of successful sending
+ *               - err: the number of sending errors
+ */
+function alternative_notify_registered_users($alternative)
+{
+    global $USER;
+
+    $reginfo = alternative_get_registration_info($alternative->id);
+
+    $eventdata = new object();
+    $eventdata->component         = 'mod_alternative';
+    $eventdata->name              = 'notifier';
+    $eventdata->userfrom          = $USER;
+    $eventdata->subject           = str_replace(
+        '[[AlterName]]',
+        $alternative->name,
+        get_string('notifierSubject', 'alternative')
+    );
+    $eventdata->fullmessageformat = FORMAT_PLAIN;   // text format
+
+    $count = array('err' => 0, 'ok' => 0);
+    foreach ($reginfo as $item) {
+        $listformatter = new \mod_alternative\support\ListFormatter(explode(',', $item->choices));
+
+        $eventdata->fullmessage       = str_replace(
+            '[[AlterName]]',
+            $alternative->name,
+            str_replace(
+                '[[options]]',
+                "\n".$listformatter->getPlainTextList(),
+                get_string('notifierFull', 'alternative')
+            )
+        );
+        $eventdata->fullmessagehtml   = str_replace(
+            '[[AlterName]]',
+            $alternative->name,
+            str_replace(
+                '[[options]]',
+                $listformatter->getUnorderedHTMLList(),
+                get_string('notifierFullHtml', 'alternative')
+            )
+        );
+        $eventdata->smallmessage      = str_replace(
+            '[[AlterName]]',
+            $alternative->name,
+            str_replace(
+                '[[options]]',
+                $listformatter->getCommaSeparatedList(),
+                get_string('notifierSmall', 'alternative')
+            )
+        );
+        $eventdata->userto = $item;
+
+        $res = message_send($eventdata);
+        if ($res) {
+            $count['ok']++;
+        } else {
+            $count['err']++;
+        }
+    }
+    return $count;
+}
 
 require_once($CFG->dirroot . '/user/selector/lib.php');
 require_once($CFG->dirroot . '/enrol/locallib.php');
