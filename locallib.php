@@ -681,16 +681,17 @@ function alternative_send_reminder($alternative) {
  *
  * @global StdClass $USER current user object
  * @param StdClass $alternative current alternative object
+ * @param int $userid specific user id
  * @return array returns an array of the sending status
  *               it contains to record referenced by the following keys :
  *               - ok: the number of successful sending
  *               - err: the number of sending errors
  */
-function alternative_notify_registered_users($alternative)
+function alternative_notify_registered_users($alternative, $userid = null)
 {
     global $USER;
 
-    $reginfo = alternative_get_registration_info($alternative->id);
+    $reginfo = alternative_get_registration_info($alternative->id, $userid);
 
     $eventdata = new object();
     $eventdata->component         = 'mod_alternative';

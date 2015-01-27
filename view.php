@@ -89,6 +89,7 @@ if (!$form->is_cancelled() and $form->is_submitted() and $form->is_validated()) 
             $_SESSION['alterNotifStat'] = 'notifysuccess';
             $_SESSION['alterNotifMsg'] = get_string('registrationsaved', 'alternative');
 
+            $registeredusers = array();
             $registrationinfo = $form->getRegistrationInfo();
             foreach ($registrationinfo as $registration) {
                 $params = array(
@@ -102,6 +103,34 @@ if (!$form->is_cancelled() and $form->is_submitted() and $form->is_validated()) 
                 );
                 $event = \mod_alternative\event\registration_updated::create($params);
                 $event->trigger();
+
+                if (!isset($registeredusers[$registration['userid']])) {
+                    $registeredusers[$registration['userid']] = $registration['userid'];
+                }
+            }
+
+            foreach ($registeredusers as $userid) {
+                if ((boolean) $alternative->notifybyemail) {
+                    $res = alternative_notify_registered_users($alternative, $userid);
+                    if ( $res['err'] == 0 ) {
+                        $_SESSION['alterNotifStat'] = 'notifysuccess';
+                        $_SESSION['alterNotifMsg'] = "Résultat envoi : ${res['ok']} messages OK";
+                    } else {
+                        $_SESSION['alterNotifStat'] = 'notifyfailure';
+                        $_SESSION['alterNotifMsg'] = "Résultat envoi : ${res['ok']} messages OK ; ${res['err']} erreurs.";
+                    }
+                    $event = \mod_alternative\event\notification_sent::create(
+                        array(
+                            'context' => $context,
+                            'other' => array(
+                                'alternativeid' => $alternative->id,
+                                'alternativename' => $alternative->name,
+                                'errors' => $res['err']
+                            )
+                        )
+                    );
+                    $event->trigger();
+                }
             }
 
             if (has_capability('mod/alternative:forceregistrations', $coursecontext)) {

@@ -747,6 +747,7 @@ function alternative_get_registrations($alternativeid)
  *
  * @global StdClass $DB global moodle database object
  * @param integer $alternativeid alternative identifier
+ * @param integer $userid specific user identifier
  * @return array returns an array of registration information objects whose attributes are:
  *                  - id: the user id
  *                  - firstnamephonetic: user firstname phonetic
@@ -763,9 +764,13 @@ function alternative_get_registrations($alternativeid)
  *                  - alternativename: name of the alternative of the registration
  *                  - choices: comma separated list of options chosen by the user
  */
-function alternative_get_registration_info($alternativeid)
+function alternative_get_registration_info($alternativeid, $userid = null)
 {
     global $DB;
+
+    $params = array(
+        'altid' => $alternativeid
+    );
 
     $sql = 'SELECT u.id, '.join(', ', get_all_user_name_fields(false, null, 'u.')).', u.email, u.auth, u.deleted, u.suspended, u.emailstop, ';
     $sql.= 'a.name as alternativename ';
@@ -775,12 +780,14 @@ function alternative_get_registration_info($alternativeid)
     $sql.= 'JOIN {alternative} a ';
     $sql.= 'ON a.id = ar.alternativeid ';
     $sql.= 'WHERE u.deleted = 0 AND u.suspended = 0 ';
+
+    if (isset($userid)) {
+        $sql.= 'AND u.id = :userid ';
+        $params['userid'] = $userid;
+    }
+    
     $sql.= 'GROUP BY u.id ';
     $sql.= 'ORDER BY u.id ASC ';
-
-    $params = array(
-        'altid' => $alternativeid
-    );
 
     $reginfo = $DB->get_records_sql($sql, $params);
 
