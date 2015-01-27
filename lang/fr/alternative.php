@@ -198,5 +198,5 @@ Permet aux enseignants d\'informer par email les utilisateurs de leurs inscripti
 $string['messageprovider:notifier'] = 'Notification de choix mod/alternative';
 $string['notifierSubject'] = "Notification : options choisies dans l'alternative “[[AlterName]]”";
 $string['notifierFull'] = "Vos options sélectionnées dans l'activité “[[AlterName]]” sont: [[options]]";
-$string['notifierFullHtml'] = "Vos options sélectionnées dans l'activité  “<i>[[AlterName]]</i>” sont:<ul>[[options]]</ul>";
+$string['notifierFullHtml'] = "Vos options sélectionnées dans l'activité  “<i>[[AlterName]]</i>” sont: [[options]]";
 $string['notifierSmall'] = "Vos options sélectionnées dans l'activité “[[AlterName]]” sont: [[options]]";

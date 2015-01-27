@@ -196,5 +196,5 @@ Allow teachers to notify all the registered users of their registrations by emai
 $string['messageprovider:notifier'] = 'mod/alternative registration notifier';
 $string['notifierSubject'] = "Notification : chosen options in alternative “[[AlterName]]”";
 $string['notifierFull'] = "Your chosen options in the activity “[[AlterName]]” are: [[options]]";
-$string['notifierFullHtml'] = "Your chosen options in the activity “<i>[[AlterName]]</i>” are:<ul>[[options]]</ul>";
+$string['notifierFullHtml'] = "Your chosen options in the activity “<i>[[AlterName]]</i>” are: [[options]]";
 $string['notifierSmall'] = "Your chosen options in the activity “[[AlterName]]” are: [[options]]";
