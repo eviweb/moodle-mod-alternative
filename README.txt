@@ -1,3 +1,6 @@
+V. 1.2.1 fix: remove $module variable use from the global scope in autoload.php
+         it caused a conflict when a user attempted to remove a random question from a quiz
+
 V. 1.2.0 add registration notification by email feature
 
 V. 1.1.2 minor fixes
