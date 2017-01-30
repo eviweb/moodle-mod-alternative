@@ -61,7 +61,9 @@ class mod_alternative_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Adding the standard "intro" and "introformat" fields
-        $this->add_intro_editor();
+        // add_intro_editor is deprecated since 2.9
+        $intro_editor_handler = method_exists($this, "standard_intro_elements") ? "standard_intro_elements" : "add_intro_editor";
+        $this->$intro_editor_handler();
 
         //-------------------------------------------------------------------------------
         $mform->addElement('advcheckbox', 'changeallowed', get_string('changeallowed', 'alternative'));
