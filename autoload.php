@@ -9,11 +9,11 @@
  */
 function alternative_get_module_info()
 {
-    $module = new stdClass();
-    $module->component = '';
+    $plugin = new stdClass();
+    $plugin->component = '';
     include __DIR__.'/version.php';
 
-    return $module;
+    return $plugin;
 }
 
 /**
@@ -21,8 +21,8 @@ function alternative_get_module_info()
  */
 spl_autoload_register(
     function ($class) {
-        $module = alternative_get_module_info();
-        $classname = str_replace($module->component.'\\', '', $class);
+        $plugin = alternative_get_module_info();
+        $classname = str_replace($plugin->component.'\\', '', $class);
         $file = __DIR__.DIRECTORY_SEPARATOR.
             'classes'.DIRECTORY_SEPARATOR.
             str_replace('\\', DIRECTORY_SEPARATOR, $classname).
