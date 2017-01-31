@@ -640,7 +640,7 @@ function alternative_send_reminder($alternative) {
     $context = context_course::instance($alternative->course);
     list($esql, $params) = get_enrolled_sql($context, 'mod/alternative:choose');
     // who hasn't registered yet?
-    $sql = "SELECT u.id, ".join(', ', get_all_user_name_fields(false, null, 'u.')).", u.email, u.auth, u.deleted, u.suspended, u.emailstop
+    $sql = "SELECT u.id, u.username, ".join(', ', get_all_user_name_fields(false, null, 'u.')).", u.email, u.auth, u.deleted, u.suspended, u.emailstop
               FROM {user} u
               JOIN ($esql) je ON je.id = u.id
               LEFT JOIN {alternative_registration} ar ON (ar.userid = u.id AND ar.alternativeid = :altid)
@@ -649,9 +649,11 @@ function alternative_send_reminder($alternative) {
     $params['altid'] = $alternative->id;
     $result = $DB->get_records_sql($sql, $params);
 
-    $eventdata = new object();
+    $class = class_exists('\core\message\message') ? '\core\message\message' : '\stdClass';
+    $eventdata = new $class();
     $eventdata->component         = 'mod_alternative';
     $eventdata->name              = 'reminder';
+    $eventdata->courseid          = $alternative->course;
     $eventdata->userfrom          = $USER;
     $eventdata->subject           = get_string('reminderSubject', 'alternative');
     $eventdata->fullmessageformat = FORMAT_PLAIN;   // text format
