@@ -51,7 +51,7 @@ class mod_alternative_registration_form extends moodleform {
         }
         $customdata['occupied'] = alternative_options_occupied_places($customdata['alternative'], false);
         $customdata['teamoccupied'] = alternative_options_occupied_places($customdata['alternative'], true);
-        parent::moodleform($action, $customdata);
+        parent::__construct($action, $customdata);
         $this->registrationinfo = array();
     }
 
