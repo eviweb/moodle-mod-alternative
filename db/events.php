@@ -26,32 +26,19 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$handlers = array (
-    'groups_group_created' => array (
-        'handlerfile'      => '/mod/alternative/lib.php',
-        'handlerfunction'  => 'alternative_group_created',
-        'schedule'         => 'instant',
-        'internal'         => 1,
+$obervers = array (
+    array (
+        'eventname' => '\core\event\group_created',
+        'callback'  => '\mod_alternative\observer\group::created',
     ),
     
-    'groups_group_updated' => array (
-        'handlerfile'      => '/mod/alternative/lib.php',
-        'handlerfunction'  => 'alternative_group_updated',
-        'schedule'         => 'instant',
-        'internal'         => 1,
+    array (
+        'eventname' => '\core\event\group_updated',
+        'callback'  => '\mod_alternative\observer\group::updated',
     ),
- 
-    'groups_group_deleted' => array (
-        'handlerfile'      => '/mod/alternative/lib.php',
-        'handlerfunction'  => 'alternative_group_deleted',
-        'schedule'         => 'instant',
-        'internal'         => 1,
-    ),
- 
-    'groups_groups_deleted' => array (
-        'handlerfile'      => '/mod/alternative/lib.php',
-        'handlerfunction'  => 'alternative_groups_deleted',
-        'schedule'         => 'instant',
-        'internal'         => 1,
+    
+    array (
+        'eventname' => '\core\event\group_deleted',
+        'callback'  => '\mod_alternative\observer\group::deleted',
     ),
 );

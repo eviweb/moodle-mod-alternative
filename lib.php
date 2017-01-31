@@ -602,39 +602,6 @@ function alternative_group_deleted($eventdata) {
 }
 
 /**
- * event handler when all group of a course are deleted
- *
- * this will set to -1 the {alternative_option}.groupid records of all alternatives
- * in the same course as the deleted groups if the old value of this field was one of
- * the ids of the deleted groups
- *
- * @global StdClass         $DB         global moodle database object
- * @param integer|boolean   $courseid   the course id or false in case of failure
- * @return boolean          return true in case of success or false
- */
-function alternative_groups_deleted($courseid) {
-    global $DB;
-    if (!$courseid) {
-        return false;
-    }
-    $sql = 'SELECT ao.id ';
-    $sql.= 'FROM {alternative_option} ao ';
-    $sql.= 'JOIN {alternative} al ';
-    $sql.= 'ON ao.alternativeid = al.id ';
-    $sql.= 'AND al.course = '.$courseid.' ';
-    $sql.= 'WHERE ao.groupid <> -1';
-    $records =  $DB->get_records_sql($sql);
-    foreach ($records as $record) {
-        $DB->update_record_raw(
-            'alternative_option',
-            array('id' => $record->id, 'groupid' => '-1'),
-            true
-        );
-    }
-    return true;
-}
-
-/**
  * update a user registration to an option
  *
  * @global StdClass $DB             global moodle database object
