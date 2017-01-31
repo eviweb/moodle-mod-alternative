@@ -95,7 +95,7 @@ M.mod_alternative.getHiddenSaver = function(source) {
 M.mod_alternative.getGroupOptions = function(context, value) {
     var optionfilter = value && value.length > 0 ? '[value="' + value + '"]' : '';
     return context ?
-        context.all('option' + optionfilter) :
+        context.all('select[name^="option[group]"] option' + optionfilter) :
         this.Y.all('select[name^="option[group]"] option' + optionfilter);
 }
 
