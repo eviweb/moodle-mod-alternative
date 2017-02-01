@@ -1,3 +1,5 @@
+V. 1.3.1 fix event observers
+
 V. 1.3.0 bunch of fixes to make this module compliant with Moodle 3.2+
 
 V. 1.2.1 fix: remove $module variable use from the global scope in autoload.php
