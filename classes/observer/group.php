@@ -27,7 +27,7 @@ namespace mod_alternative\observer;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($this->dirroot.'/mod/alternative/lib.php');
+require_once($CFG->dirroot.'/mod/alternative/lib.php');
 
 class group {
     /**
@@ -81,5 +81,7 @@ class group {
             'groups',
             $event->objectid
         )->name;
+        
+        return $eventdata;
     }
 }

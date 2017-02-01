@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$obervers = array (
+$observers = array (
     array (
         'eventname' => '\core\event\group_created',
         'callback'  => '\mod_alternative\observer\group::created',
