@@ -34,13 +34,13 @@ M.mod_alternative = M.mod_alternative || {};
 * @param {Object} Y YUI instance
 */
 M.mod_alternative.init = function(Y) {
-    this.Y = Y;    
+    this.Y = Y;
     this.initSettingOptions();
 }
 
 /**
  * get the checkbox to enable the group binding feature
- * 
+ *
  * @returns YUI Node
  */
 M.mod_alternative.getBindingCB = function() {
@@ -49,7 +49,7 @@ M.mod_alternative.getBindingCB = function() {
 
 /**
  * get the checkbox to force the group matching feature
- * 
+ *
  * @returns YUI Node
  */
 M.mod_alternative.getMatchingCB = function() {
@@ -58,7 +58,7 @@ M.mod_alternative.getMatchingCB = function() {
 
 /**
  * get the checkbox to force a one to one relationship between options and groups
- * 
+ *
  * @returns YUI Node
  */
 M.mod_alternative.getOneToOneCB = function() {
@@ -67,7 +67,7 @@ M.mod_alternative.getOneToOneCB = function() {
 
 /**
  * get all group select menus
- * 
+ *
  * @returns YUI NodeList
  */
 M.mod_alternative.getAllGroupSelectors = function() {
@@ -77,7 +77,7 @@ M.mod_alternative.getAllGroupSelectors = function() {
 /**
  * get the hidden field related to a menu, here to save its value
  * this allow the value to be submitted by the form even the menu is disabled
- * 
+ *
  * @returns YUI Node
  */
 M.mod_alternative.getHiddenSaver = function(source) {
@@ -87,7 +87,7 @@ M.mod_alternative.getHiddenSaver = function(source) {
 
 /**
  * get all group options of a given menu or all group options
- * 
+ *
  * @param YUI Node  context context node or null
  * @param string    value   option value
  * @returns YUI NodeList
@@ -95,7 +95,7 @@ M.mod_alternative.getHiddenSaver = function(source) {
 M.mod_alternative.getGroupOptions = function(context, value) {
     var optionfilter = value && value.length > 0 ? '[value="' + value + '"]' : '';
     return context ?
-        context.all('select[name^="option[group]"] option' + optionfilter) :
+        context.all('option' + optionfilter) :
         this.Y.all('select[name^="option[group]"] option' + optionfilter);
 }
 
@@ -107,16 +107,16 @@ M.mod_alternative.initSettingOptions = function() {
         binding = this.getBindingCB(),
         matching = this.getMatchingCB(),
         onetoone = this.getOneToOneCB();
-    
+
     this.enabled = binding.get('checked');
     this.forced = matching.get('checked');
     this.onetoone = onetoone.get('checked');
-   
-    // checkbox for enabling group selectors    
+
+    // checkbox for enabling group selectors
     binding.on('click', function(e) {
         me.enabled = this.get('checked');
         me.onEnabled();
-    });    
+    });
     // checkbox for forcing group matching
     matching.on('click', function(e) {
         me.forced = this.get('checked');
@@ -127,7 +127,7 @@ M.mod_alternative.initSettingOptions = function() {
         me.onetoone = this.get('checked');
         me.onOneToOne();
     });
-    
+
     this.onEnabled();
     if (this.forced) {
         this.onForced();
@@ -150,18 +150,18 @@ M.mod_alternative.initGroupSelectors = function() {
         }
         if (!me.enabled) {
             select.detachAll('change');
-        } else {            
+        } else {
             select.on('change', function(e) {
                 var oldValue = me.getHiddenSaver(select).get('value');
                 var curValue = select.get('value');
                 // save current value
-                me.getHiddenSaver(this).set('value', curValue);               
+                me.getHiddenSaver(this).set('value', curValue);
                 if (me.onetoone) {
                     // disable other options with the same current value
                     me.disableOptionsWithValue(curValue, select);
                     // enable other options with the same old value
                     me.releaseAllOptions(me.Y, oldValue);
-                }                
+                }
                 // update old value
                 oldValue = curValue;
             });
@@ -210,9 +210,9 @@ M.mod_alternative.excludeOptionDoublons = function() {
     var options = this.getGroupOptions();
     var selected = [];
     options.each(function(option) {
-        var value = option.get('value');        
+        var value = option.get('value');
         if (value > -1 && option.get('selected')) {
-            var key = value.toString();            
+            var key = value.toString();
             if (!selected[key]) {
                 selected[key] = true;
                 me.disableOptionsWithValue(value, option.ancestor());
@@ -227,9 +227,9 @@ M.mod_alternative.excludeOptionDoublons = function() {
 
 /**
  * release all disabled group options
- * 
+ *
  * @param YUI Node  context     node context to get options from
- * @param string    value       value to compare with option value  
+ * @param string    value       value to compare with option value
  */
 M.mod_alternative.releaseAllOptions = function(context, value) {
     var options = this.getGroupOptions(context, value);
@@ -240,9 +240,9 @@ M.mod_alternative.releaseAllOptions = function(context, value) {
 
 /**
  * disable group options with a certain value
- * 
+ *
  * @param string    value       value to compare with option values
- * @param YUI Node  parent      parent of the current node to compare with parents 
+ * @param YUI Node  parent      parent of the current node to compare with parents
  *                              of browsed options
  */
 M.mod_alternative.disableOptionsWithValue = function(value, parent) {
@@ -276,7 +276,7 @@ M.mod_alternative.toggleGroupMatching = function() {
             var optsize = options.size();
             for (var i=optsize - 1, found=false; i >= 0; i--) {
                 var option = options.item(i);
-                var selected = option.getHTML() === textvalue;            
+                var selected = option.getHTML() === textvalue;
                 found = found || selected;
                 if (i === 0 && !found) {
                     selected = true;
